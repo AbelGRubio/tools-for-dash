@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tools_dash.form.functions &mdash; tools_for_dash v1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> tools_for_dash
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">21-tools_for_dash</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tools_for_dash</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>tools_dash.form.functions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tools_dash.form.functions</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">configparser</span>
+
+<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">html</span>
+
+<span class="kn">from</span> <span class="nn">tools_dash.functions</span> <span class="kn">import</span> <span class="n">define_id</span>
+<span class="kn">from</span> <span class="nn">tools_dash.widgets</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="get_values"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.functions.get_values">[docs]</a><span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="n">parameter</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+
+    <span class="n">splitted</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">val_parameter</span> <span class="o">=</span> <span class="n">splitted</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">val_parameter</span></div>
+
+
+<div class="viewcode-block" id="short_name"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.functions.short_name">[docs]</a><span class="k">def</span> <span class="nf">short_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">name_split</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">nm</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">nm</span> <span class="ow">in</span> <span class="n">name_split</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="generate_form_from_parser"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.functions.generate_form_from_parser">[docs]</a><span class="k">def</span> <span class="nf">generate_form_from_parser</span><span class="p">(</span><span class="n">pre_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                              <span class="n">reader_config</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">,</span>
+                              <span class="n">all_text</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Genera los elementos que se van a incluir en el formulario</span>
+
+<span class="sd">    :param pre_name: es el prefijo que se va a añadir a los elementos del formualrio</span>
+<span class="sd">    :param reader_config: es el parser del .ini leido</span>
+<span class="sd">    :param all_text: sirve para indicar que tipo de .ini hay que mostrar</span>
+
+<span class="sd">    :return: generators and inputs for callbacks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">list_elements</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">generators_fun</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;dropdown&#39;</span><span class="p">:</span> <span class="n">Dropdown</span><span class="p">,</span>
+        <span class="s1">&#39;switch&#39;</span><span class="p">:</span> <span class="n">Switches</span><span class="p">,</span>
+        <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">InputWidget</span><span class="p">,</span>
+        <span class="s1">&#39;number&#39;</span><span class="p">:</span> <span class="n">InputWidget</span><span class="p">,</span>
+        <span class="s1">&#39;button&#39;</span><span class="p">:</span> <span class="n">generate_button</span><span class="p">,</span>
+        <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="n">DatePicker</span><span class="p">,</span>
+        <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">InputWidget</span><span class="p">,</span>
+        <span class="s1">&#39;slider&#39;</span><span class="p">:</span> <span class="n">Slider</span><span class="p">,</span>
+        <span class="s1">&#39;header&#39;</span><span class="p">:</span> <span class="n">Header2</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># cnt = 1</span>
+    <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">reader_config</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">_k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;DEFAULT&#39;</span><span class="p">,</span> <span class="s1">&#39;Struct_form&#39;</span><span class="p">]:</span>
+            <span class="n">first_time</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">_kk</span> <span class="ow">in</span> <span class="n">reader_config</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">_vv</span> <span class="o">=</span> <span class="n">reader_config</span><span class="p">[</span><span class="n">_k</span><span class="p">][</span><span class="n">_kk</span><span class="p">]</span>
+                <span class="n">para_val</span> <span class="o">=</span> <span class="n">get_values</span><span class="p">(</span><span class="n">_vv</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">_kk</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">all_text</span> <span class="ow">and</span> <span class="n">first_time</span> <span class="ow">and</span> <span class="n">_k</span> <span class="o">!=</span> <span class="s1">&#39;button&#39;</span><span class="p">:</span>
+                    <span class="n">id_values</span> <span class="o">=</span> <span class="n">define_id</span><span class="p">(</span><span class="n">pre_id</span><span class="o">=</span><span class="n">pre_name</span><span class="p">,</span>
+                                          <span class="n">widget_type</span><span class="o">=</span><span class="s1">&#39;title&#39;</span><span class="p">,</span>
+                                          <span class="n">extra</span><span class="o">=</span><span class="n">_k</span><span class="p">)</span>
+                    <span class="n">name_title</span> <span class="o">=</span> <span class="n">_k</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+                    <span class="n">element_value</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">H2</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name_title</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="n">id_values</span><span class="p">)</span>
+                    <span class="n">list_elements</span><span class="p">[</span><span class="n">id_values</span><span class="p">]</span> <span class="o">=</span> <span class="n">element_value</span>
+                    <span class="n">first_time</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">if</span> <span class="n">all_text</span><span class="p">:</span>
+                    <span class="n">id_values</span> <span class="o">=</span> <span class="n">define_id</span><span class="p">(</span><span class="n">pre_id</span><span class="o">=</span><span class="n">pre_name</span><span class="p">,</span>
+                                          <span class="n">widget_type</span><span class="o">=</span><span class="n">_k</span><span class="p">,</span>
+                                          <span class="n">extra</span><span class="o">=</span><span class="n">_kk</span><span class="p">)</span>
+                    <span class="n">type_generator</span> <span class="o">=</span> <span class="s1">&#39;button&#39;</span>
+                    <span class="k">if</span> <span class="n">_k</span> <span class="o">!=</span> <span class="s1">&#39;button&#39;</span><span class="p">:</span>
+                        <span class="n">type_generator</span> <span class="o">=</span> <span class="s1">&#39;text&#39;</span>
+                        <span class="n">id_values</span> <span class="o">=</span> <span class="n">define_id</span><span class="p">(</span><span class="n">pre_id</span><span class="o">=</span><span class="n">pre_name</span><span class="p">,</span>
+                                              <span class="n">widget_type</span><span class="o">=</span><span class="n">type_generator</span><span class="p">,</span>
+                                              <span class="n">extra</span><span class="o">=</span><span class="n">short_name</span><span class="p">(</span><span class="n">_kk</span><span class="p">))</span>
+
+                    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input_type&#39;</span><span class="p">:</span> <span class="n">type_generator</span><span class="p">}</span>
+                    <span class="n">element_value</span> <span class="o">=</span> <span class="n">generators_fun</span><span class="p">[</span><span class="n">type_generator</span><span class="p">](</span><span class="n">label_name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                                                                   <span class="n">item_name</span><span class="o">=</span><span class="n">id_values</span><span class="p">,</span>
+                                                                   <span class="n">value</span><span class="o">=</span><span class="n">para_val</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">type_generator</span> <span class="o">!=</span> <span class="s1">&#39;button&#39;</span><span class="p">:</span>
+                        <span class="n">element_value</span> <span class="o">=</span> <span class="n">element_value</span><span class="o">.</span><span class="n">layout</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">id_values</span> <span class="o">=</span> <span class="n">define_id</span><span class="p">(</span><span class="n">pre_id</span><span class="o">=</span><span class="n">pre_name</span><span class="p">,</span>
+                                          <span class="n">widget_type</span><span class="o">=</span><span class="n">_k</span><span class="p">,</span>
+                                          <span class="n">extra</span><span class="o">=</span><span class="n">_kk</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">_k</span> <span class="o">!=</span> <span class="s1">&#39;button&#39;</span><span class="p">:</span>
+                        <span class="n">id_values</span> <span class="o">=</span> <span class="n">define_id</span><span class="p">(</span><span class="n">pre_id</span><span class="o">=</span><span class="n">pre_name</span><span class="p">,</span>
+                                              <span class="n">widget_type</span><span class="o">=</span><span class="n">_k</span><span class="p">,</span>
+                                              <span class="n">extra</span><span class="o">=</span><span class="n">short_name</span><span class="p">(</span><span class="n">_kk</span><span class="p">))</span>
+
+                    <span class="k">if</span> <span class="n">_k</span> <span class="o">==</span> <span class="s1">&#39;number&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">para_val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                            <span class="n">para_val</span> <span class="o">=</span> <span class="n">para_val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">para_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">para_val</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                    <span class="k">if</span> <span class="n">_k</span> <span class="o">==</span> <span class="s1">&#39;header&#39;</span><span class="p">:</span>
+                        <span class="n">para_val</span> <span class="o">=</span> <span class="n">_vv</span>
+
+                    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input_type&#39;</span><span class="p">:</span> <span class="n">_k</span><span class="p">}</span>
+                    <span class="n">element_value</span> <span class="o">=</span> <span class="n">generators_fun</span><span class="p">[</span><span class="n">_k</span><span class="p">](</span><span class="n">label_name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                                                       <span class="n">item_name</span><span class="o">=</span><span class="n">id_values</span><span class="p">,</span>
+                                                       <span class="n">value</span><span class="o">=</span><span class="n">para_val</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">_k</span> <span class="o">!=</span> <span class="s1">&#39;button&#39;</span><span class="p">:</span>
+                        <span class="n">element_value</span> <span class="o">=</span> <span class="n">element_value</span><span class="o">.</span><span class="n">layout</span>
+
+                <span class="n">list_elements</span><span class="p">[</span><span class="n">id_values</span><span class="p">]</span> <span class="o">=</span> <span class="n">element_value</span>
+
+    <span class="k">return</span> <span class="n">list_elements</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Abel Garcia.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

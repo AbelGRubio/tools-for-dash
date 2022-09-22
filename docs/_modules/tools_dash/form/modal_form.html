@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tools_dash.form.modal_form &mdash; tools_for_dash v1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> tools_for_dash
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">21-tools_for_dash</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tools_for_dash</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>tools_dash.form.modal_form</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tools_dash.form.modal_form</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">import</span> <span class="nn">dash_bootstrap_components</span> <span class="k">as</span> <span class="nn">dbc</span>
+<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">html</span><span class="p">,</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span>
+
+<span class="kn">from</span> <span class="nn">.form_interface</span> <span class="kn">import</span> <span class="n">FormInterface</span>
+
+
+<div class="viewcode-block" id="ModalForm"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.modal_form.ModalForm">[docs]</a><span class="k">class</span> <span class="nc">ModalForm</span><span class="p">(</span><span class="n">FormInterface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abre un modal con el formulario</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id_modal_name&#39;</span><span class="p">,</span> <span class="s1">&#39;_body_modal_name&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="s1">&#39;scrollable&#39;</span><span class="p">,</span> <span class="s1">&#39;keyboard&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;backdrop&#39;</span><span class="p">,</span> <span class="s1">&#39;centered&#39;</span><span class="p">,</span> <span class="s1">&#39;button_name&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;id_open_modal_button&#39;</span><span class="p">,</span> <span class="s1">&#39;open_modal_button&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">action_open_modal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_open_modal_action</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ModalForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">form_name</span><span class="o">=</span><span class="n">form_name</span><span class="p">,</span>
+                                        <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">action_open_modal</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_open_modal_action</span><span class="p">(</span><span class="n">action_open_modal</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_modal_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form_name</span><span class="p">,</span>
+                                           <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_body_modal_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">-alert&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form_name</span><span class="p">,</span>
+                                                    <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_open_modal_button</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">buttonopen_modal</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">,</span>
+                                                                  <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">open_modal_button</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_parameters</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_kwargs</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_actions</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_add_open_modal_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">functions</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        añade las funciones al abrir el open modal</span>
+<span class="sd">        :param functions: lista de funciones a añadir</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">open_modal&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">)]</span> <span class="o">=</span> <span class="n">functions</span>
+
+    <span class="k">def</span> <span class="nf">_add_open_modal_button</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        crea el boton open modal y lo añade a la lista de inputs y states</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">button_name</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">open_modal_button</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button_name</span><span class="p">,</span>
+                                                <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_open_modal_button</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                <span class="n">className</span><span class="o">=</span><span class="s1">&#39;open_modal_button1&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">open_modal_button</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s2">&quot;bi bi-gear-wide-connected&quot;</span><span class="p">),</span>
+                                                <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_open_modal_button</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                <span class="n">className</span><span class="o">=</span><span class="s1">&#39;open_modal_button1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buttons</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">id_open_modal_button</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_modal_button</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_property</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id_open_modal_button</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">id_open_modal_button</span><span class="p">,</span>
+                              <span class="n">_p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs_and_states</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_open_modal_button</span><span class="p">,</span>
+                                             <span class="n">component_property</span><span class="o">=</span><span class="n">_p</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Actualiza las acciones asociadas a los botones</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">open_modal&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">open_modal&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_open_modal</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">open_modal&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_open_modal</span><span class="p">,</span> <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">accept&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_accept_form_modal</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">clear&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clear_form_modal</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">cancel&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cancel_form_modal</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_accept_form_modal</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Acción que se ejecuta al aceptar el form</span>
+
+<span class="sd">        :param kwargs: argumentos variables que corresponden con los items que se estan</span>
+<span class="sd">            controlando</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;open_modal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">kwargs</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_clear_form_modal</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Acción que se ejecuta al limpiar el form</span>
+
+<span class="sd">        :param kwargs: argumentos variables que corresponden con los items que se estan</span>
+<span class="sd">            controlando</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;open_modal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">kwargs</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_cancel_form_modal</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Acción que se ejecuta al cancelar el form</span>
+
+<span class="sd">        :param kwargs: argumentos variables que corresponden con los items que se estan</span>
+<span class="sd">            controlando</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;open_modal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">kwargs</span>
+
+    <span class="k">def</span> <span class="nf">_open_modal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param kwargs: argumentos variables que corresponden con los items que se estan</span>
+<span class="sd">            controlando</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Ha abierto el modal&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;open_alert&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;color_alert&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;primary&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;open_modal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">kwargs</span>
+
+    <span class="k">def</span> <span class="nf">_add_output_open_modal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Añade el boton de open modal a los outputs</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;open_modal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_modal_name</span><span class="p">,</span>
+                                            <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;is_open&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;open_modal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="ModalForm.get_open_modal_action"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.modal_form.ModalForm.get_open_modal_action">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_open_modal_action</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param kwargs: argumentos variables que corresponden con los items que se estan</span>
+<span class="sd">            controlando</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aux</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s1">&#39;buttons_actions&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s1">&#39;open_modal&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;buttons_actions&#39;</span><span class="p">]:</span>
+                <span class="n">aux</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;buttons_actions&#39;</span><span class="p">][</span><span class="s1">&#39;open_modal&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">aux</span></div>
+
+<div class="viewcode-block" id="ModalForm.default_parameters"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.modal_form.ModalForm.default_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">default_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pasea los kwargs de entrada para la clase modal y añade los parametros por default</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">default_values</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="s1">&#39;lg&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;scrollable&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;keyboard&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;backdrop&#39;</span><span class="p">:</span> <span class="s1">&#39;static&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;centered&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;button_name&#39;</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_kwargs</span><span class="p">(</span><span class="o">**</span><span class="n">default_values</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ModalForm.read_kwargs"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.modal_form.ModalForm.read_kwargs">[docs]</a>    <span class="k">def</span> <span class="nf">read_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param kwargs: argumentos variables que corresponden con los items que se estan</span>
+<span class="sd">            controlando</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__slots__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="ModalForm.reload_layout"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.modal_form.ModalForm.reload_layout">[docs]</a>    <span class="k">def</span> <span class="nf">reload_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">splits_elements</span><span class="p">()</span>
+
+        <span class="n">buttons_layout</span> <span class="o">=</span> <span class="p">[</span><span class="n">_b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">_b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">buttons</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+        <span class="n">extra_elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_extra_element</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_layout</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Modal</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">ModalHeader</span><span class="p">(</span><span class="n">dbc</span><span class="o">.</span><span class="n">ModalTitle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_title_form</span><span class="p">),</span>
+                                <span class="n">close_button</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">ModalBody</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_line_alert</span><span class="p">,</span>
+                               <span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">others_elements</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+                               <span class="o">*</span><span class="n">extra_elements</span><span class="p">],</span>
+                              <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_body_modal_name</span><span class="p">),</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">ModalFooter</span><span class="p">(</span>
+                    <span class="n">buttons_layout</span>
+                <span class="p">),</span>
+            <span class="p">],</span>
+            <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_modal_name</span><span class="p">,</span>
+            <span class="n">centered</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">centered</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">is_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">keyboard</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">keyboard</span><span class="p">,</span>
+            <span class="n">backdrop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backdrop</span><span class="p">,</span>
+            <span class="n">scrollable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scrollable</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_inputs_and_states</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_open_modal_button</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_output_open_modal</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">state</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_callback</span><span class="p">()</span></div></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Abel Garcia.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
