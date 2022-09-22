@@ -24,9 +24,11 @@ def generate_form_from_parser(pre_name: str,
                               all_text: bool = False) -> dict:
     """
     Genera los elementos que se van a incluir en el formulario
+
     :param pre_name: es el prefijo que se va a añadir a los elementos del formualrio
     :param reader_config: es el parser del .ini leido
     :param all_text: sirve para indicar que tipo de .ini hay que mostrar
+
     :return: generators and inputs for callbacks
     """
     list_elements = {}

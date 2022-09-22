@@ -1,10 +1,8 @@
-import configparser
 import logging
 import random
 
-import dash
 import dash_bootstrap_components as dbc
-from dash import html, dcc
+from dash import html
 
 
 class CardClass:
@@ -181,4 +179,3 @@ class CardClass:
 def short_name(name: str):
     name_split = name.split('_')
     return ''.join([nm[:1] for nm in name_split])
-

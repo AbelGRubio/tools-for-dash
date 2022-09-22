@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tools_dash.form.form_interface &mdash; tools_for_dash v1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> tools_for_dash
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">21-tools_for_dash</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tools_for_dash</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>tools_dash.form.form_interface</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tools_dash.form.form_interface</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interface creada para clase formulario donde se registran algunas propiedades comunes</span>
+<span class="sd">    a todos los formularios</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">dash_bootstrap_components</span> <span class="k">as</span> <span class="nn">dbc</span>
+<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">State</span><span class="p">,</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">callback</span>
+
+<span class="kn">from</span> <span class="nn">.functions</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="TypeStruct"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.form_interface.TypeStruct">[docs]</a><span class="k">class</span> <span class="nc">TypeStruct</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Custom exception para indicar que lo añadido no es correcto.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Type struct incorrect. Should be a dict with key as argument and the &#39;</span> \
+                       <span class="sa">f</span><span class="s1">&#39;value has to be a layout&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span></div>
+
+
+<div class="viewcode-block" id="FormInterface"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.form_interface.FormInterface">[docs]</a><span class="k">class</span> <span class="nc">FormInterface</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class form where you can find some properties and funtionality defined here</span>
+
+<span class="sd">    ** _logger: is used to define the logger</span>
+
+<span class="sd">    This attribute only have to be defined one time</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">buttons_actions</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">extra_elements</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">load</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param form_name: this name have to be equal to the file .ini on the folder</span>
+<span class="sd">            assets/forms</span>
+
+<span class="sd">         Nombre del formulario, tiene que ser igual que el archivo .ini que hay en la carpeta</span>
+<span class="sd">            no ha de incluirse .ini. Este nombre se utiliza para poner titulo a formulario. Los espacios _ los</span>
+<span class="sd">            sustituye por espacios en blanco.</span>
+<span class="sd">        :param logger:</span>
+<span class="sd">        :param path: where you type</span>
+<span class="sd">        :param buttons_actions: diccionario para indicar otras acciones que han de hacer los botones</span>
+<span class="sd">        :param extra_elements: elementos extra a tener en cuenta para realizar las acciones</span>
+<span class="sd">        :param load: sirve para indicar si hay que cargar el .ini o no</span>
+<span class="sd">        :param kwargs:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_form_name</span> <span class="o">=</span> <span class="n">form_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">form_name</span> <span class="o">=</span> <span class="n">form_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit_name</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">form_name</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">limit_name</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_list_elements</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_element_actions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">define_buttons_actions</span><span class="p">(</span><span class="n">buttons_actions</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_layout</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_style</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;margin&quot;</span><span class="p">:</span> <span class="s2">&quot;10px&quot;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">others_elements</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buttons</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs_and_states</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_element_past_values</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extra_elements</span> <span class="o">=</span> <span class="n">extra_elements</span>
+
+        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">configuration</span> <span class="kn">import</span> <span class="n">LOGGER</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">LOGGER</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_logger</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">tuple</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">logger</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_form</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">formname&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form_name</span><span class="p">,</span>
+                                             <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_title_form</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_form_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+
+        <span class="sd">&quot;&quot;&quot;definicion del mensaje de alert&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_alert_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">-alert&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form_name</span><span class="p">,</span>
+                                               <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_line_alert</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Alert</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
+                                     <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_alert_name</span><span class="p">,</span> <span class="n">is_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">dismissable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                     <span class="n">duration</span><span class="o">=</span><span class="mi">4000</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;assets\forms&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">basename_path</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;assets&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">path</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">basename_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser_config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">load</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read_parser_config</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_load_elements</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">NotImplemented</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Copia del formulario</span>
+
+<span class="sd">        TODO: hay que implementar correctamente los métodos</span>
+<span class="sd">         __radd__, __copy__ y __add__</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">class_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">class_type</span><span class="p">(</span><span class="n">form_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">form_name</span><span class="p">,</span>
+                          <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">NotImplemented</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        para cuando sumemos un dictionario con nuevos items</span>
+<span class="sd">        y hacer control de los items que entran</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="n">_add_list_generators</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_list_elements</span><span class="p">,</span>
+                                        <span class="o">**</span><span class="n">other</span><span class="o">.</span><span class="n">_list_elements</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reload_layout</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TypeStruct</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">NotImplemented</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Para cuando sumemos dos formularios difentes, por si queremos juntarlos</span>
+<span class="sd">        :param other</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aux</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">other</span><span class="p">[</span><span class="n">_k</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">aux</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">other</span><span class="p">[</span><span class="n">_k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">_add_list_generators</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_list_elements</span><span class="p">,</span> <span class="o">**</span><span class="n">aux</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_list_elements</span> <span class="o">=</span> <span class="n">_add_list_generators</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reload_layout</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="FormInterface.copy"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.form_interface.FormInterface.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">NotImplemented</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__copy__</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Getter para la variable layout, se ejecutará una vez terminado de añadir</span>
+<span class="sd">        todos los elementos que queremos controlar</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_layout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reload_layout</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_layout</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_property</span><span class="p">(</span><span class="n">component_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: hacer el cambio a diccionario</span>
+<span class="sd">        :param component_id: obtiene la propiedad que interesa</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">property_name</span> <span class="o">=</span> <span class="s1">&#39;value&#39;</span>
+
+        <span class="k">if</span> <span class="s1">&#39;date&#39;</span> <span class="ow">in</span> <span class="n">component_id</span><span class="p">:</span>
+            <span class="n">property_name</span> <span class="o">=</span> <span class="s1">&#39;date&#39;</span>
+        <span class="k">elif</span> <span class="s1">&#39;button&#39;</span> <span class="ow">in</span> <span class="n">component_id</span><span class="p">:</span>
+            <span class="n">property_name</span> <span class="o">=</span> <span class="s1">&#39;n_clicks&#39;</span>
+
+        <span class="k">return</span> <span class="n">property_name</span>
+
+    <span class="k">def</span> <span class="nf">_load_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Carga todos los elementos leidos desde el parser.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_list_elements</span> <span class="o">=</span> <span class="n">generate_form_from_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form_name</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">limit_name</span><span class="p">],</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">_parser_config</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_load_path_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Crea la ruta donde se encuentra el archivo .ini para cargar</span>
+<span class="sd">        :param filename: nombre del archivo</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">form_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_path_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;ini&#39;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_path_file</span>
+
+    <span class="k">def</span> <span class="nf">_read_parser_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        lee el parser</span>
+<span class="sd">        :param filename: nombre del archivo a leer</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_path_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_path_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">_path_file</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parser_config</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parser_config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">_path_file</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Reader parser .ini from </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_path_file</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No file .ini in folder.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_pressed_button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtiene el boton que se ha pulsado, esta funcion se utiliza para saber qué acción</span>
+<span class="sd">        hay que ejecutar despues</span>
+<span class="sd">        :param kwargs: argumentos variables que corresponden con los items que se estan</span>
+<span class="sd">            controlando</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">buttons_clicks_past</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="bp">self</span><span class="o">.</span><span class="n">short_name</span><span class="p">(</span><span class="n">_k</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">buttons</span><span class="p">[</span><span class="n">_k</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">buttons</span><span class="p">])</span>
+        <span class="n">buttons_click_new</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">_k</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">_k</span><span class="p">])</span> <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="k">if</span> <span class="s1">&#39;button&#39;</span> <span class="ow">in</span> <span class="n">_k</span><span class="p">])</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">_o</span><span class="p">,</span> <span class="n">_n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">buttons_clicks_past</span><span class="p">,</span> <span class="n">buttons_click_new</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">_o</span> <span class="ow">in</span> <span class="n">_n</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">buttons_clicks_past</span><span class="p">[</span><span class="n">_o</span><span class="p">]</span> <span class="o">!=</span> <span class="n">buttons_click_new</span><span class="p">[</span><span class="n">_n</span><span class="p">]:</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">_o</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;button&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                    <span class="n">new_click_state</span> <span class="o">=</span> <span class="n">buttons_click_new</span><span class="p">[</span><span class="n">_n</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">_b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">buttons</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_name</span><span class="p">(</span><span class="n">_b</span><span class="p">)</span> <span class="ow">in</span> <span class="n">_n</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">buttons</span><span class="p">[</span><span class="n">_b</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buttons</span><span class="p">[</span><span class="n">_b</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_click_state</span><span class="p">)</span>
+                            <span class="k">break</span>
+                    <span class="k">break</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;por si cambia algun valor en los items y hay que hacer algo&quot;&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_element_past_values</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_element_past_values</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">_k</span><span class="p">]:</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">_k</span>
+                    <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">_clear_form</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Función para limpiar el formulario</span>
+
+<span class="sd">        :param kwargs: argumentos variables que corresponden con los items que se estan</span>
+<span class="sd">            controlando</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">_switch</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
+                   <span class="s1">&#39;switch&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                   <span class="s1">&#39;dropdown&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">_ke</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>  <span class="c1"># :self._list_elements.keys():</span>
+            <span class="k">if</span> <span class="s1">&#39;button&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_ke</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">_bool_switch</span> <span class="o">=</span> <span class="p">[</span><span class="n">sn</span> <span class="ow">in</span> <span class="n">_ke</span> <span class="k">for</span> <span class="n">sn</span> <span class="ow">in</span> <span class="n">_switch</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+                <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">_bool_switch</span><span class="p">):</span>
+                    <span class="n">_opt_switch</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">_switch</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">_bool_switch</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">_switch</span><span class="p">[</span><span class="n">_opt_switch</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">_ke</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.options&#39;</span><span class="p">):</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="n">kwargs</span><span class="p">[</span><span class="n">_ke</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Ha limpiado el modal&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;open_alert&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;color_alert&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;warning&#39;</span>
+
+        <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">kwargs</span>
+
+    <span class="k">def</span> <span class="nf">_cancel_form</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Función para cancelar el formulario</span>
+<span class="sd">        :param kwargs: argumentos variables que corresponden con los items que se estan</span>
+<span class="sd">            controlando</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Ha cancelado el modal&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;open_alert&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;color_alert&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;danger&#39;</span>
+
+        <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">kwargs</span>
+
+    <span class="k">def</span> <span class="nf">_accept_form</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Función para aceptar el formulario</span>
+
+<span class="sd">        :param kwargs: argumentos variables que corresponden con los items que se estan</span>
+<span class="sd">            controlando</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Ha aceptado el modal&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;open_alert&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;color_alert&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;success&#39;</span>
+
+        <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">kwargs</span>
+
+    <span class="k">def</span> <span class="nf">_action_button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ejecuta la accion correspondiente al boton</span>
+
+<span class="sd">        :param kwargs: argumentos variables que corresponden con los items que se estan</span>
+<span class="sd">            controlando</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pressed_button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pressed_button</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;modal: </span><span class="si">{}</span><span class="s1"> pressed button is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">,</span>
+                                                      <span class="n">pressed_button</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">pressed_button</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">_fun</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="n">pressed_button</span><span class="p">]:</span>
+                <span class="n">kwargs</span> <span class="o">=</span> <span class="n">_fun</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pressed_button</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_element_actions</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">_fun</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_element_actions</span><span class="p">[</span><span class="n">pressed_button</span><span class="p">]:</span>
+                <span class="n">kwargs</span> <span class="o">=</span> <span class="n">_fun</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pressed_button</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot; para evitar las llamadas vacias &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;open_modal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="n">_k</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">response</span>
+
+    <span class="k">def</span> <span class="nf">_get_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_values</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        obtiene los imputs</span>
+<span class="sd">        :param dict_values:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aux</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buttons</span>
+        <span class="k">if</span> <span class="n">dict_values</span><span class="p">:</span>
+            <span class="n">aux</span> <span class="o">=</span> <span class="n">dict_values</span>
+
+        <span class="n">inputs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">_b</span> <span class="ow">in</span> <span class="n">aux</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_name</span><span class="p">(</span><span class="n">_b</span><span class="p">)</span>
+            <span class="n">_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_property</span><span class="p">(</span><span class="n">_b</span><span class="p">)</span>
+            <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">_p</span><span class="p">)]</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="n">_b</span><span class="p">,</span>
+                                                     <span class="n">component_property</span><span class="o">=</span><span class="n">_p</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">inputs</span>
+
+    <span class="k">def</span> <span class="nf">_get_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_values</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtiene los states</span>
+<span class="sd">        :param dict_values:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aux</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">others_elements</span>
+        <span class="k">if</span> <span class="n">dict_values</span><span class="p">:</span>
+            <span class="n">aux</span> <span class="o">=</span> <span class="n">dict_values</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">_b</span> <span class="ow">in</span> <span class="n">aux</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_name</span><span class="p">(</span><span class="n">_b</span><span class="p">)</span>
+            <span class="n">_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_property</span><span class="p">(</span><span class="n">_b</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">_p</span><span class="p">)]</span> <span class="o">=</span> <span class="n">State</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="n">_b</span><span class="p">,</span>
+                                                          <span class="n">component_property</span><span class="o">=</span><span class="n">_p</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span>
+
+    <span class="k">def</span> <span class="nf">_get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_values</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtiene los ouputs</span>
+<span class="sd">        :param dict_values:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">aux</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_alert_name</span><span class="p">,</span>
+                                     <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;children&quot;</span><span class="p">),</span>
+                   <span class="s1">&#39;open_alert&#39;</span><span class="p">:</span> <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_alert_name</span><span class="p">,</span>
+                                        <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;is_open&quot;</span><span class="p">),</span>
+                   <span class="s1">&#39;color_alert&#39;</span><span class="p">:</span> <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_alert_name</span><span class="p">,</span>
+                                         <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;color&quot;</span><span class="p">)}</span>
+            <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">aux</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">aux</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_alert_name</span><span class="p">,</span>
+                                              <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;children&quot;</span><span class="p">),</span>
+                            <span class="s1">&#39;open_alert&#39;</span><span class="p">:</span> <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_alert_name</span><span class="p">,</span>
+                                                 <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;is_open&quot;</span><span class="p">),</span>
+                            <span class="s1">&#39;color_alert&#39;</span><span class="p">:</span> <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_alert_name</span><span class="p">,</span>
+                                                  <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;color&quot;</span><span class="p">)}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;open_alert&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;color_alert&#39;</span><span class="p">:</span> <span class="s1">&#39;success&#39;</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">dict_values</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">_b</span> <span class="ow">in</span> <span class="n">dict_values</span><span class="p">:</span>
+                <span class="n">component_id</span> <span class="o">=</span> <span class="n">dict_values</span><span class="p">[</span><span class="n">_b</span><span class="p">]</span><span class="o">.</span><span class="n">component_id</span>
+                <span class="n">short_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_name</span><span class="p">(</span><span class="n">component_id</span><span class="p">)</span>
+                <span class="n">_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_property</span><span class="p">(</span><span class="n">_b</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">short_id</span><span class="p">,</span> <span class="n">_p</span><span class="p">)]</span> <span class="o">=</span> <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="n">component_id</span><span class="p">,</span>
+                                                                    <span class="n">component_property</span><span class="o">=</span><span class="n">_p</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span>
+
+    <span class="k">def</span> <span class="nf">_set_inputs_and_states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtiene los imputs and states para ponerlos en el callback</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inputs_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_inputs</span><span class="p">()</span>
+        <span class="n">states_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_states</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_outputs</span><span class="p">(</span><span class="n">states_dict</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs_and_states</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            para gestionar si se ha asignado una custom function a un valor</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">aux</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="o">**</span><span class="n">inputs_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">states_dict</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs_and_states</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">aux</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs_and_states</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputs_and_states</span> <span class="o">=</span> <span class="n">aux</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputs_and_states</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="o">**</span><span class="n">inputs_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">states_dict</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FormInterface.splits_elements"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.form_interface.FormInterface.splits_elements">[docs]</a>    <span class="k">def</span> <span class="nf">splits_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Divide los elementos que carga el .ini entre botones y los demás elementos</span>
+<span class="sd">        :return: </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buttons</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">others_elements</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_elements</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;button&#39;</span> <span class="ow">in</span> <span class="n">_k</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">buttons</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_list_elements</span><span class="p">[</span><span class="n">_k</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">others_elements</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_elements</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FormInterface.add_extra_element"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.form_interface.FormInterface.add_extra_element">[docs]</a>    <span class="k">def</span> <span class="nf">add_extra_element</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Añade los elementos extra al formualrio</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">extra_elements</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_elements</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">_ee</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_elements</span><span class="p">:</span>
+                <span class="n">_e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_elements</span><span class="p">[</span><span class="n">_ee</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">_e</span><span class="p">[</span><span class="s1">&#39;show&#39;</span><span class="p">]:</span>
+                    <span class="n">extra_elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_e</span><span class="p">[</span><span class="s1">&#39;widget&#39;</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="s1">&#39;button&#39;</span> <span class="ow">in</span> <span class="n">_ee</span><span class="p">:</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_name</span><span class="p">(</span><span class="n">_ee</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;button&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+                    <span class="c1"># print(name)</span>
+                    <span class="k">if</span> <span class="s1">&#39;clear&#39;</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">add_default_response</span><span class="p">,</span> <span class="p">]</span>
+                        <span class="k">for</span> <span class="n">_fun</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">[</span><span class="s1">&#39;clear&#39;</span><span class="p">]:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_fun</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="s1">&#39;accept&#39;</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">_ee</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">add_default_response</span><span class="p">,</span> <span class="p">]</span>
+                        <span class="k">for</span> <span class="n">_fun</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">[</span><span class="s1">&#39;accept&#39;</span><span class="p">]:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_fun</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="s1">&#39;input&#39;</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">_p</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">]:</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_ee</span><span class="p">,</span> <span class="n">_p</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">inputs_and_states</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="n">_ee</span><span class="p">,</span>
+                                                             <span class="n">component_property</span><span class="o">=</span><span class="n">_p</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="s1">&#39;state&#39;</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">_p</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]:</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_ee</span><span class="p">,</span> <span class="n">_p</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">inputs_and_states</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">State</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="n">_ee</span><span class="p">,</span>
+                                                             <span class="n">component_property</span><span class="o">=</span><span class="n">_p</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="s1">&#39;output&#39;</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">_p</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]:</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_ee</span><span class="p">,</span> <span class="n">_p</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="n">_ee</span><span class="p">,</span>
+                                                    <span class="n">component_property</span><span class="o">=</span><span class="n">_p</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="s1">&#39;clear&#39;</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">_fun</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">[</span><span class="s1">&#39;clear&#39;</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">clear&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_fun</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s1">&#39;accept&#39;</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">_fun</span> <span class="ow">in</span> <span class="n">_e</span><span class="p">[</span><span class="s1">&#39;accept&#39;</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">accept&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_fun</span><span class="p">)</span>
+
+                <span class="n">f</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">extra_elements</span></div>
+
+<div class="viewcode-block" id="FormInterface.short_name"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.form_interface.FormInterface.short_name">[docs]</a>    <span class="k">def</span> <span class="nf">short_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">name</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FormInterface.set_kwarg_to_args"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.form_interface.FormInterface.set_kwarg_to_args">[docs]</a>    <span class="k">def</span> <span class="nf">set_kwarg_to_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain the kwargs associated to args</span>
+<span class="sd">        :param args:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">_e</span><span class="p">,</span> <span class="n">_k</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs_and_states</span><span class="o">.</span><span class="n">keys</span><span class="p">())):</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">_e</span>
+        <span class="k">return</span> <span class="n">kwargs</span></div>
+
+<div class="viewcode-block" id="FormInterface.find_id_item"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.form_interface.FormInterface.find_id_item">[docs]</a>    <span class="k">def</span> <span class="nf">find_id_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find the first item which name similar to item_name</span>
+<span class="sd">        :param item_name:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">id_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form_name</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">limit_name</span><span class="p">],</span>
+                                <span class="n">item_name</span><span class="p">)</span>
+        <span class="n">id_element</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_elements</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">id_name</span> <span class="ow">in</span> <span class="n">_k</span><span class="p">:</span>
+                <span class="n">id_element</span> <span class="o">=</span> <span class="n">_k</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">id_element</span></div>
+
+<div class="viewcode-block" id="FormInterface.reload_layout"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.form_interface.FormInterface.reload_layout">[docs]</a>    <span class="k">def</span> <span class="nf">reload_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        layout creation</span>
+<span class="sd">        :param state: boolean for add the callback or not</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">splits_elements</span><span class="p">()</span>
+
+        <span class="n">buttons_layout</span> <span class="o">=</span> <span class="p">[</span><span class="n">_b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">_b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">buttons</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+        <span class="n">extra_elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_extra_element</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">extra_elements</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">_ly</span> <span class="o">=</span> <span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="n">extra_elements</span><span class="p">),</span>
+                             <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="n">buttons_layout</span><span class="p">)</span>
+                             <span class="p">],</span>
+                            <span class="n">className</span><span class="o">=</span><span class="s1">&#39;d-flex justify-content-between&#39;</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_ly</span> <span class="o">=</span> <span class="n">buttons_layout</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_layout</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Form</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">H2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_title_form</span><span class="p">),</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">_line_alert</span><span class="p">,</span>
+                                          <span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">others_elements</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+                                          <span class="o">*</span><span class="n">_ly</span><span class="p">,</span>
+                                          <span class="p">],</span>
+                                <span class="n">style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span>
+                                <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_form</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_inputs_and_states</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">state</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_callback</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="FormInterface.define_buttons_actions"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.form_interface.FormInterface.define_buttons_actions">[docs]</a>    <span class="k">def</span> <span class="nf">define_buttons_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buttons_actions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Se definen las funciones que van a realizar los botones</span>
+<span class="sd">        :param buttons_actions: diccionario para añadir las buttons_actions extras que se indiquen </span>
+<span class="sd">            al instanciar la clase</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">accept&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">):</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_accept_form</span><span class="p">,</span> <span class="p">],</span>
+                                 <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">clear&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">):</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_clear_form</span><span class="p">,</span> <span class="p">],</span>
+                                 <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">cancel&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nm</span><span class="p">):</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_cancel_form</span><span class="p">,</span> <span class="p">]}</span>
+        <span class="n">keys_ba</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">buttons_actions</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">_kba</span> <span class="ow">in</span> <span class="n">buttons_actions</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">_kaction</span> <span class="ow">in</span> <span class="n">keys_ba</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">_kba</span> <span class="ow">in</span> <span class="n">_kaction</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">_fun</span> <span class="ow">in</span> <span class="n">buttons_actions</span><span class="p">[</span><span class="n">_kba</span><span class="p">]:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_buttons_actions</span><span class="p">[</span><span class="n">_kaction</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">_fun</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FormInterface.add_default_response"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.form_interface.FormInterface.add_default_response">[docs]</a>    <span class="k">def</span> <span class="nf">add_default_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add default arguments</span>
+<span class="sd">        :param kwargs:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;open_alert&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;color_alert&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;success&#39;</span>
+
+        <span class="k">for</span> <span class="n">_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="n">_k</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">kwargs</span></div>
+
+<div class="viewcode-block" id="FormInterface.add_custom_action_to_item"><a class="viewcode-back" href="../../../tools_dash.form.html#tools_dash.form.form_interface.FormInterface.add_custom_action_to_item">[docs]</a>    <span class="k">def</span> <span class="nf">add_custom_action_to_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_in_item</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                  <span class="n">in_property</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                  <span class="n">id_out_item</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                  <span class="n">out_property</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                  <span class="n">fun_item</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a custom action to an item</span>
+<span class="sd">        :param id_in_item:</span>
+<span class="sd">        :param in_property:</span>
+<span class="sd">        :param id_out_item:</span>
+<span class="sd">        :param out_property:</span>
+<span class="sd">        :param fun_item:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">id_in_element</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_id_item</span><span class="p">(</span><span class="n">id_in_item</span><span class="p">)</span>
+
+        <span class="n">id_out_element</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_id_item</span><span class="p">(</span><span class="n">id_out_item</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">id_out_element</span> <span class="ow">and</span> <span class="n">id_in_element</span><span class="p">:</span>
+            <span class="n">out_name_property</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">short_name</span><span class="p">(</span><span class="n">id_out_element</span><span class="p">),</span> <span class="n">out_property</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">out_name_property</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="n">out_name_property</span><span class="p">]</span> <span class="o">=</span> <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="n">id_out_element</span><span class="p">,</span>
+                                                         <span class="n">component_property</span><span class="o">=</span><span class="n">out_property</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">inputs_and_states</span><span class="p">[</span><span class="n">out_name_property</span><span class="p">]</span> <span class="o">=</span> <span class="n">State</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="n">id_out_element</span><span class="p">,</span>
+                                                                  <span class="n">component_property</span><span class="o">=</span><span class="n">out_property</span><span class="p">)</span>
+
+            <span class="n">abrev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_name</span><span class="p">(</span><span class="n">id_in_element</span><span class="p">)</span>
+            <span class="n">_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_property</span><span class="p">(</span><span class="n">in_property</span><span class="p">)</span>
+            <span class="n">abrev</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">abrev</span><span class="p">,</span> <span class="n">_p</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputs_and_states</span><span class="p">[</span><span class="n">abrev</span><span class="p">]</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="n">id_in_element</span><span class="p">,</span>
+                                                  <span class="n">component_property</span><span class="o">=</span><span class="n">_p</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_element_actions</span><span class="p">[</span><span class="n">abrev</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">fun_item</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_default_response</span><span class="p">,</span> <span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_element_past_values</span><span class="p">[</span><span class="n">abrev</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">())</span></div>
+
+    <span class="k">def</span> <span class="nf">_add_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        add the callback to the form</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nd">@callback</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+            <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs_and_states</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+            <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+            <span class="n">fun_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_kwarg_to_args</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_button</span><span class="p">(</span><span class="o">**</span><span class="n">fun_kwargs</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">response</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Abel Garcia.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

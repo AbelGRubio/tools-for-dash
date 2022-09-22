@@ -7,10 +7,12 @@ def define_id(pre_id: str = '',
               number_of_digits: int = 5) -> str:
     """
     Create a unique id for the widgets
+
     :param pre_id:
     :param extra:
     :param widget_type:
     :param number_of_digits:
+
     :return:
     """
     max_number = int('1' + '0' * number_of_digits)
